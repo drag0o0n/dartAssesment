@@ -1,0 +1,65 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  List<String> board = List.filled(9, ' ');
+  String currentPlayer = 'X';
+
+  while (true) {
+    printBoard(board);
+    int move = getPlayerMove(board, currentPlayer);
+    board[move - 1] = currentPlayer;
+    
+    if (checkWinner(board, currentPlayer)) {
+      printBoard(board);
+      print('Player $currentPlayer wins!');
+      break;
+    } else if (!board.contains(' ')) {
+      printBoard(board);
+      print('The game is a draw.');
+      break;
+    }
+    currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
+  }
+}
+
+void printBoard(List<String> board) {
+  print('\n');
+  for (int i = 0; i < 9; i += 3) {
+    print(' ${board[i]} | ${board[i + 1]} | ${board[i + 2]} ');
+    if (i < 6) {
+      print('---+---+---');
+    }
+  }
+  print('\n');
+}
+
+int getPlayerMove(List<String> board, String player) {
+  int move;
+  do {
+    stdout.write('Player $player, please enter the number of the square where you want to place your $player (1-9): ');
+    move = int.tryParse(stdin.readLineSync() ?? '') ?? 0;
+  } while (move < 1 || move > 9 || board[move - 1] != ' ');
+  return move;
+}
+
+bool checkWinner(List<String> board, String player) {
+  const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  for (List<int> combo in winningCombinations) {
+    if (board[combo[0]] == player &&
+        board[combo[1]] == player &&
+        board[combo[2]] == player) {
+      return true;
+    }
+  }
+  retur
